@@ -19,5 +19,5 @@ or (2) select a card with either suit or number that matches your current card (
 10. You win if the other player has no cards left or they reach 26 cards
 
 ## Features
-You are playing against a (mostly) brainless AI here, though future updates to this game will allow for multiplayer and more advanced/strategic AI models
+You are playing against a (mostly) brainless AI here, though future updates to this game will allow for multiplayer and more advanced AI models with developed strategies
 
