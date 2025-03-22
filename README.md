@@ -15,8 +15,8 @@ or (2) select a card with either suit or number that matches your current card (
 6. The Save Condition can be fulfilled when:
 (1) you can guess one of the two most recently obtained cards from the other player's deck (in which you receive a bonus of one extra card)
 (2) after 5 rounds, you can guess how many cards the other player has (in which one of their cards must be removed and given to you, but it does not count as a "recent card")
-9. You lose if you have no cards left
-10. You win if the other player has no cards left or they reach 26 cards
+9. You lose if you have no cards left or the opponent reaches 26 cards
+10. You win if the other player has no cards left or you reach 26 cards
 
 ## Features
 You are playing against a (mostly) brainless AI here, though future updates to this game will allow for multiplayer and more advanced AI models with developed strategies
