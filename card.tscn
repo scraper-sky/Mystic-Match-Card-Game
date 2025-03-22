@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=3 uid="uid://csu0rjglto2eh"]
+
+[ext_resource type="Script" path="res://card.gd" id="1_v8adv"]
+[ext_resource type="Texture2D" uid="uid://bpkoe6lc358ky" path="res://blankcardtemplate.png" id="2_cc4gg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0pquy"]
+size = Vector2(64.75, 105)
+
+[node name="Card" type="Node2D"]
+script = ExtResource("1_v8adv")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(191, 86.875)
+scale = Vector2(2, 1.50391)
+texture = ExtResource("2_cc4gg")
+
+[node name="Label" type="Label" parent="Sprite2D"]
+modulate = Color(0, 0, 1, 1)
+offset_left = -14.0
+offset_top = -8.0
+offset_right = 93.0
+offset_bottom = 38.0
+scale = Vector2(0.25, 0.25)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Ace of Spades
+"
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(191.625, 86.5)
+shape = SubResource("RectangleShape2D_0pquy")
+
+[connection signal="input_event" from="Area2D" to="." method="_on_area_2d_input_event"]
