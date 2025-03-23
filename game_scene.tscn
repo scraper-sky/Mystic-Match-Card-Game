@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://cr4wv2inycxu7"]
+
+[ext_resource type="Texture2D" uid="uid://cavovra3sx6st" path="res://futuristicjapaneseonsen.jpg" id="1_cuuyy"]
+
+[node name="GameScene" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(587, 494)
+scale = Vector2(1.14062, 1.04102)
+texture = ExtResource("1_cuuyy")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+position = Vector2(557, 672)
+amount = 75
+lifetime = 3.0
+emission_shape = 3
+emission_rect_extents = Vector2(400, 200)
+spread = 180.0
+gravity = Vector2(0, -10)
+initial_velocity_min = 20.0
+initial_velocity_max = 50.0
+scale_amount_min = 2.5
+scale_amount_max = 10.0
+color = Color(1, 1, 0, 1)
+hue_variation_min = 0.43
+hue_variation_max = 0.43
