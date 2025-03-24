@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://d0exmswxaeta0"]
+
+[ext_resource type="Texture2D" uid="uid://cavovra3sx6st" path="res://futuristicjapaneseonsen.jpg" id="1_76425"]
+[ext_resource type="Script" path="res://end_game.gd" id="1_hhrw3"]
+
+[node name="EndGame" type="Node2D"]
+scale = Vector2(0.338361, 0.369378)
+script = ExtResource("1_hhrw3")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(400, 400)
+scale = Vector2(-5.7821, 4.73847)
+texture = ExtResource("1_76425")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -446.269
+offset_top = -657.862
+offset_right = 567.731
+offset_bottom = -335.862
+text = "You Lose
+"
+
+[node name="Button" type="Button" parent="."]
+offset_left = -351.695
+offset_top = 110.997
+offset_right = 582.305
+offset_bottom = 538.997
+text = "Play Again"

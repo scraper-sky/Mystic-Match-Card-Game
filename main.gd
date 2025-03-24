@@ -20,6 +20,7 @@ func _ready():
 	create_deck()
 	shuffle_deck()
 	deal_initial_cards()
+	update_card_counters()
 
 func create_deck():
 	var suits = ["Spades", "Hearts", "Clubs", "Diamonds"]
@@ -47,8 +48,6 @@ func create_card(card_data):
 	var error = card.connect("card_selected", Callable(self, "_on_card_selected"))
 	if error == OK:
 		print("Signal connected for: ", card_data["number"], " of ", card_data["suit"])
-	else:
-		print("Signal connection failed: ", error)
 	return card
 
 func _on_card_selected(card):
@@ -56,8 +55,6 @@ func _on_card_selected(card):
 	if is_player_turn and not is_processing_turn and card in selection_cards and not save_guess_active:
 		is_processing_turn = true
 		var card_key = card.number + " of " + card.suit
-		
-		# Check if card is in player’s hand first
 		var in_player_hand = false
 		for hand_card in player_hand:
 			if hand_card.number + " of " + hand_card.suit == card_key:
@@ -67,8 +64,6 @@ func _on_card_selected(card):
 			print("Invalid! Card already in your hand: ", card_key)
 			is_processing_turn = false
 			return
-		
-		# Now check AI hand and validity
 		if player_skip_count == 3:
 			if is_valid_move(card_key):
 				play_card(card, card_key)
@@ -103,9 +98,6 @@ func handle_save_condition(card, card_key):
 		show_recent_card_guess_ui()
 
 func play_card(card, card_key):
-	if card == null or card_key == null:
-		print("Error: Attempted to play null card!")
-		return
 	print("Match! Played: ", card_key)
 	if player_current_card and player_current_card.get_parent() == self:
 		remove_child(player_current_card)
@@ -113,15 +105,13 @@ func play_card(card, card_key):
 	if card.get_parent() != self:
 		add_child(card)
 	player_current_card.position = Vector2(100, 500)
+	player_current_card.visible = true
 	player_hand.append(card)
 	update_hand_display("player")
 	player_skip_count = 0
 	clear_selection_cards()
 	save_guess_active = false
 	end_turn()
-
-func can_save():
-	return save_guess_active
 
 func show_number_guess_input():
 	if guess_input and guess_input.is_inside_tree():
@@ -227,37 +217,27 @@ func _on_guess_recent_card(guess):
 	get_node("/root").remove_meta("pending_card")
 	get_node("/root").remove_meta("pending_card_key")
 
-func _on_skip_button_pressed() -> void:
-	if is_player_turn and not is_processing_turn and player_skip_count < 3:
-		is_processing_turn = true
-		player_skip_count += 1
-		print("Skipped! Skip count: ", player_skip_count)
-		end_turn()
-		is_processing_turn = false
-	elif player_skip_count >= 3:
-		print("Max skips reached! You must play a matching card.")
-
 func end_turn():
 	is_player_turn = false
 	ai_turn()
 	is_player_turn = true
+	if player_hand.size() >= 26:
+		end_game("win_full")
+		return
+	elif ai_hand.size() >= 26:
+		end_game("lose_full")
+		return
+	elif player_hand.size() == 0:
+		end_game("lose_empty")
+		return
+	elif ai_hand.size() == 0:
+		end_game("win_empty")
+		return
 	if player_skip_count == 3:
 		print("Must play a matching card this turn!")
 	if not save_guess_active:
 		show_selection_cards()
 	print("Player hand size: ", player_hand.size(), " | AI hand size: ", ai_hand.size())
-	if player_hand.size() == 0:
-		print("You lose! Your hand is empty.")
-		get_tree().quit()
-	elif ai_hand.size() == 0:
-		print("You win! AI hand is empty.")
-		get_tree().quit()
-	elif player_hand.size() >= 26:
-		print("You win! Collected 26 cards.")
-		get_tree().quit()
-	elif ai_hand.size() >= 26:
-		print("You lose! AI collected 26 cards.")
-		get_tree().quit()
 
 func ai_turn():
 	if randf() < 0.2:
@@ -349,9 +329,23 @@ func clear_selection_cards():
 
 func update_hand_display(player_type):
 	var hand = player_hand if player_type == "player" else ai_hand
-	var y_pos = 600 if player_type == "player" else 200
+	var y_pos_base = 600 if player_type == "player" else 200
 	for i in hand.size():
 		var card = hand[i]
-		if card.get_parent() != self:
-			add_child(card)
-		card.position = Vector2(100 + i * 50, y_pos)
+		if player_type == "player":
+			if card.get_parent() != self:
+				add_child(card)
+			var row = i / 10
+			var col = i % 10
+			card.position = Vector2(100 + col * 100, y_pos_base + row * 50)
+		elif card.get_parent() == self:
+			remove_child(card)
+	update_card_counters()
+
+func update_card_counters():
+	$PlayerCardCount.text = "Player: " + str(player_hand.size())
+
+func end_game(result):
+	print("Game Over: ", result)
+	Global.game_result = result
+	get_tree().change_scene_to_file("res://EndScene.tscn")
